@@ -9,6 +9,8 @@
 # Assim, um algoritmo de força bruta é inviável para um número de itens elevado.
 # Para 77 itens, por exemplo, o algoritmo levaria 5 bilhões de anos para calcular a melhor solução.
 
+#===================================================================================================================================================================
+
 from random import choices, randint, randrange, random
 from collections import namedtuple
 
@@ -32,13 +34,19 @@ limite_peso = 3000
 limite_fitness = 1310
 limite_geracoes = 1000
 
+#===================================================================================================================================================================
+
 # Gerar combinação aleatória de itens (com zeros e uns) com um tamanho 'length'
 def gerar_genoma(length):
     return choices([0,1], k = length)
 
+#===================================================================================================================================================================
+
 # Gerar população de n_mochilas aleatórias, cada uma composta por seu genoma aleatório de n_itens
 def gerar_populacao(n_mochilas, n_itens):
     return [gerar_genoma(n_itens) for _ in range(n_mochilas)]
+
+#===================================================================================================================================================================
 
 # Calcular fitness (valor total) para cada mochila. Se o peso exceder o limite, o fitness é 0.
 def fitness(genoma):   
@@ -55,9 +63,13 @@ def fitness(genoma):
 
     return valor
 
+#===================================================================================================================================================================
+
 # Selecionar um pai e uma mãe da população, baseado em seus fitnesses. O resultado é uma lista com um par de mochilas.
 def selecionar_pais (populacao):
     return choices(population = populacao, weights = [fitness(genoma) for genoma in populacao], k=2)
+
+#===================================================================================================================================================================
 
 # Cruzar os pais (a e b) para gerar dois filhos como uma tupla. Os genes são cruzados em intervalos aleatórios.
 def crossover (a, b):
@@ -69,6 +81,8 @@ def crossover (a, b):
     p = randint(1, lenght - 1)
     return a[0:p] + b[p:], b[0:p] + a[p:]
 
+#===================================================================================================================================================================
+
 # Mutar os genes de uma mochila com uma probabilidade de 5%
 def mutacao (genoma, prob=0.05):
     # Pegar um item aleatório da mochila
@@ -76,6 +90,8 @@ def mutacao (genoma, prob=0.05):
     # Não fazer nada se a probabilidade nãos se concretizar. Caso contrário, mudar o item.
     genoma[index] = genoma[index] if random() > prob else abs(genoma[index]-1)
     return genoma
+
+#===================================================================================================================================================================
 
 # Rodar a evolução utilizando as funções predefinidas
 def rodar_evolucao(limite_fitness):
@@ -108,6 +124,7 @@ def rodar_evolucao(limite_fitness):
     populacao = sorted(populacao, key = lambda genoma: fitness(genoma), reverse = True)
 
     return populacao, i
+#===================================================================================================================================================================
 
 def genoma_para_itens(genoma):
     lst = []
@@ -116,8 +133,8 @@ def genoma_para_itens(genoma):
             lst += [item.nome]
     return lst
 
-
+#===================================================================================================================================================================
 
 populacao, geracoes = rodar_evolucao(limite_fitness)
 print(f'Número de gerações:{geracoes}')
-print(f'Melhor solução: {genoma_para_itens(populacao[0])}, fitness: {fitness(populacao[0])}')
+print(f'Melhor solução: {genoma_para_itens(populacao[0])}, Fitness: {fitness(populacao[0])}')
