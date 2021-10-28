@@ -13,6 +13,7 @@
 
 from random import choices, randint, randrange, random
 from collections import namedtuple
+import matplotlib.pyplot as plt
 
 
 Item = namedtuple('Item',['nome', 'valor', 'peso'])
@@ -20,18 +21,18 @@ itens = [
     Item('Laptop', 500, 2200),
     Item('Headphones', 150, 160),
     Item('Caneca', 60, 350),
-    Item('Bloco de notas', 40, 333),
+    Item('Casaco', 40, 400),
     Item('Balinhas', 5, 25),
     Item('Meias', 10, 38),
     Item('Lenços', 15, 80),
-    Item('Celular', 500, 200),
-    Item('Boné', 100, 70)
+    Item('Celular', 600, 200),
+    Item('Livro', 190, 70)
 ]
 
-n_mochilas = 10
+n_mochilas = 25
 n_itens = len(itens)
 limite_peso = 3000
-limite_fitness = 1310
+limite_fitness = 1500
 limite_geracoes = 1000
 
 #===================================================================================================================================================================
@@ -97,6 +98,8 @@ def mutacao (genoma, prob=0.05):
 def rodar_evolucao(limite_fitness):
     # Gerar a população inicial
     populacao = gerar_populacao (n_mochilas, n_itens)
+    geracoes = []
+    fitness_values = []
 
     # Para cada população atual, criar uma nova geração até atingir o limite de fitness ou de gerações.
     for i in range(limite_geracoes):
@@ -119,11 +122,12 @@ def rodar_evolucao(limite_fitness):
             prox_geracao += [filho_a, filho_b]
         
         populacao = prox_geracao
+        populacao = sorted(populacao, key = lambda genoma: fitness(genoma), reverse = True)
+        geracoes.append(i)
+        fitness_values.append(fitness(populacao[0]))
+    
 
-    # Ordenar a população final
-    populacao = sorted(populacao, key = lambda genoma: fitness(genoma), reverse = True)
-
-    return populacao, i
+    return populacao, i, geracoes, fitness_values
 #===================================================================================================================================================================
 
 def genoma_para_itens(genoma):
@@ -135,6 +139,10 @@ def genoma_para_itens(genoma):
 
 #===================================================================================================================================================================
 
-populacao, geracoes = rodar_evolucao(limite_fitness)
-print(f'Número de gerações:{geracoes}')
+populacao, geracao, geracoes, fitness_values = rodar_evolucao(limite_fitness)
+print(f'Número de gerações:{geracao}')
 print(f'Melhor solução: {genoma_para_itens(populacao[0])}, Fitness: {fitness(populacao[0])}')
+plt.plot(geracoes, fitness_values)
+plt.xlabel('Geração')
+plt.ylabel("Valor Fitness")
+plt.show()
