@@ -1,13 +1,12 @@
 from math import sqrt
-from random import randint, choices, random, randrange
-from pprint import pprint
+from random import randint, choices, random
 import matplotlib.pyplot as plt
 
 #==========================================================================================================================================================================
 
 d_vetor = 1 # Cada vetor poderá ter um valor entre (- d_vetor e + d_vetor) em x e (0 e +d_vetor em y)
 n_genes = 250 # Número de pares de vetores (x,y) e consequentemente pares de posições da bola
-n_bolas = 200 # Cada bola recebe n vetores (n_genes) que vão ditar sua movimentação, formando n_genes de posições (genes)
+n_bolas = 250 # Cada bola recebe n vetores (n_genes) que vão ditar sua movimentação, formando n_genes de posições (genes)
 vel = 10 # Velocidade aplicada a cada vetor para movimentar cada bola
 xi_bola = 0 # Posição inicial da bola em x
 yi_bola = 0 # Posição inicial da bola em y
@@ -32,14 +31,12 @@ def gerar_genoma (xi_bola, yi_bola, n_genes):
         yi_bola += vel*vetor[1]
     return genoma
 
-#pprint(gerar_genoma(xi_bola, yi_bola, n_genes)[-1])
 #==========================================================================================================================================================================
 
 # Gerar população de bolas aleatórias
 def gerar_populacao (n_bolas):
     return [gerar_genoma (xi_bola, yi_bola, n_genes) for _ in range (n_bolas)] 
 
-#pprint(gerar_populacao(n_bolas))
 #==========================================================================================================================================================================
 
 def fitness (genoma):
@@ -56,8 +53,7 @@ def selecionar_par (populacao):
         population = populacao,
         weights = [fitness(genoma)*100 for genoma in populacao],
         k = 2)
-
-#pprint(selecionar_par(gerar_populacao(n_bolas)))        
+     
 #==========================================================================================================================================================================
 
 def crossover (a, b):
@@ -65,8 +61,6 @@ def crossover (a, b):
     # Retorna uma tupla de "filhos" por meio de um single point crossover
     return a[0:p] + b[p:], b[0:p] + a[p:]
 
-#pais = selecionar_par(gerar_populacao(n_bolas))
-#pprint(crossover(pais[0],pais[1]))
 #==========================================================================================================================================================================
 
 def mutacao (genoma, mut_prob):
@@ -75,7 +69,6 @@ def mutacao (genoma, mut_prob):
     else:
         genoma = gerar_genoma(xi_bola,yi_bola, n_genes)
     return genoma
-
 #==========================================================================================================================================================================
 
 def run_evolucao (limite_fitness, limite_geracoes):
